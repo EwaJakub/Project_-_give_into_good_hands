@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="pl">
+  {% csrf_token %}
+  {% include 'head.html' %}
+
+  {% include 'header.html' %}
+
+  {% block content %}{% endblock %}
+
+  {% include 'footer.html' %}
+
+    {% load static %}
+    <script src={% static "js/app.js" %}></script>
+</html>
