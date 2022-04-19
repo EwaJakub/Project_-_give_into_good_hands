@@ -63,8 +63,8 @@
       <h2>Komu pomagamy?</h2>
 
       <ul class="help--buttons">
-        <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacjom</a></li>
-        <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
+        <li data-id="1"><a href="/fun/" class="btn btn--without-border active">Fundacjom</a></li>
+        <li data-id="2"><a href="/org/" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
         <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
       </ul>
 
@@ -73,23 +73,40 @@
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy. Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
         <ul class="help--slides-items">
-          {% for foundation in foundations %}
+          {% for foundation in page_1.object_list %}
           <li>
             <div class="col">
               <div class="title">{{ foundation.name }}</div>
               <div class="subtitle">Cel i misja: {{ foundation.description }}</div>
             </div>
-            <div class="col"><div class="text"> {{ foundation.categories.all.values_list.0.1 }}</div></div>
+            <div class="col"><div class="text">
+<!--              other way of extracting category from foundation data-->
+<!--              {% for category in foundation.categories.all.values_list %}-->
+<!--              {{ category.1 }}-->
+<!--              {% endfor %}-->
+              {{ found_categories }}
+            </div></div>
           </li>
           {% endfor %}
         </ul>
-        <!-- Pagination
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+<!--         Pagination-->
+        <ul class="help--slides-pagination" id="1">
+        {% if page_1.has_previous %}
+          <a href="?page={{ page_1.previous_page_number }}#help" class="btn btn--small btn--without-border active">< poprzednia</a>
+        {% endif %}
+      {% for pg in page_1.paginator.page_range %}
+          <a href="?page={{pg}}#help" class="btn btn--small btn--without-border" >{{pg}}</a>
+      {% endfor %}
+        {% if page_1.has_next %}
+          <a href="?page={{ page_1.next_page_number }}#help" class="btn btn--small btn--without-border">następna ></a>
+        {% endif %}
+
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border active" data-page="1">1</a></li>-->
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border" data-page="2">2</a></li>-->
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border" data-page="2">3</a></li>-->
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border" data-page="2">4</a></li>-->
         </ul>
-        -->
+      </div>
       </div>
 
 
@@ -100,61 +117,78 @@
           quos suscipit corporis!
         </p>
         <ul class="help--slides-items">
-          {% for organization in organizations %}
+          {% for organization in page_2.object_list %}
           <li>
             <div class="col">
               <div class="title">{{ organization.name }}</div>
               <div class="subtitle">Cel i misja: {{ organization.description }}</div>
             </div>
             <div class="col"><div class="text">
-              {% for category in organization.categories.all.values_list %}
-              {{ category.1 }}
-              {% endfor %}
+<!--              other way of extracting category from foundation data-->
+<!--              {% for category in organization.categories.all.values_list %}-->
+<!--              {{ category.1 }}-->
+<!--              {% endfor %}-->
+              {{ org_categories }}
             </div></div>
           </li>
           {% endfor %}
         </ul>
 
-        <!-- Pagination
+<!--        Pagination-->
         <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
+        {% if page_2.has_previous %}
+            <a href="?page_2={{ page_2.previous_page_number }}#help" class="btn btn--small btn--without-border active">< poprzednia</a>
+        {% endif %}
+        {% for pg in page_2.paginator.page_range %}
+            <a href="?page_2={{pg}}#help" class="btn btn--small btn--without-border">{{pg}}</a>
+        {% endfor %}
+        {% if page_2.has_next %}
+            <a href="?page_2={{ page_2.next_page_number }}#help" class="btn btn--small btn--without-border">następna ></a>
+        {% endif %}
         </ul>
-        -->
       </div>
 
       <!-- SLIDE 3 -->
       <div class="help--slides" data-id="3">
         <p>Lorem ipsum dolor sit amet, his ocurreret persequeris ea, ad utinam laudem duo. Verterem adipisci partiendo eos ne, ea his reque quaeque recteque, ne quo lobortis intellegam.</p>
         <ul class="help--slides-items">
+          {% for local_collection in page_3.object_list %}
           <li>
             <div class="col">
-              <div class="title">Lokalna zbiórka 1</div>
-              <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
+              <div class="title">{{ local_collection.name }}</div>
+              <div class="subtitle">Cel i misja: {{ local_collection.description }}</div>
             </div>
 
-            <div class="col"><div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div></div>
+            <div class="col"><div class="text">
+<!--              other way of extracting category from foundation data-->
+<!--              {% for category in local_collection.categories.all.values_list %}-->
+<!--              {{ category.1 }}-->
+<!--              {% endfor %}-->
+                {{ loc_categories }}
+            </div></div>
           </li>
 
-          <li>
-            <div class="col">
-              <div class="title">Lokalna zbiórka 2</div>
-              <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-            </div>
-
-            <div class="col"><div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div></div>
-          </li>
+         {% endfor %}
         </ul>
 
-        <!-- Pagination
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+<!--          Pagination-->
+        <ul class="help--slides-pagination" id="3">
+        {% if page_3.has_previous %}
+            <a href="?page_3={{ page_3.previous_page_number }}" class="btn btn--small btn--without-border active">< poprzednia</a>
+        {% endif %}
+        {% for pg in page_3.paginator.page_range %}
+            <a href="?page_3={{pg}}" class="btn btn--small btn--without-border active">{{pg}}</a>
+        {% endfor %}
+        {% if page_3.has_next %}
+            <a href="?page_3={{ page_3.next_page_number }}" class="btn btn--small btn--without-border active">następna ></a>
+        {% endif %}
+
         </ul>
-        -->
+
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border active" data-page="1">1</a></li>-->
+<!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border" data-page="2">2</a></li>-->
+<!--        </ul>-->
+
       </div>
     </section>
   {% endblock %}
