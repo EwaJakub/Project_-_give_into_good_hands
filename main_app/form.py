@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, redirect
 
 # form for user Registration
 class AddUserForm(UserCreationForm):
@@ -10,7 +12,7 @@ class AddUserForm(UserCreationForm):
     class Meta:
         model = User  # form based on User model in django auth
         fields = (
-            'username', "first_name", "last_name", "email", "password1", "password2"
+            "username", "first_name", "last_name", "email", "password1", "password2"
         )
 
     def __init__(self, *args, **kwargs):  # inheritance
@@ -38,3 +40,41 @@ class AddUserForm(UserCreationForm):
             self.add_error("password2", "Hasła w obu polach muszą być jednakowe.")
 
         return cleaned_data
+
+
+class LoginForm(forms.Form):
+    email = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput(render_value=False))
+
+    def clean(self):
+        self.cleaned_data = super().clean()
+
+        user = self.authenticate_via_email()
+        if not user:
+            return None
+        else:
+            self.user = user
+        return self.cleaned_data
+
+    def authenticate_user(self):
+        return authenticate(
+            username=self.user.username,
+            password=self.cleaned_data['password'])
+
+    def authenticate_via_email(self):
+        """
+            Authenticate user using email.
+            Returns user object if authenticated else None
+        """
+        email = self.cleaned_data['email']
+        if email:
+            try:
+                user = User.objects.get(email__iexact=email)  # iexact niewrazliwe na wielkość liter
+                if user.check_password(self.cleaned_data['password']):
+                    return user
+                else:
+                    self.add_error("password", "Hasło niewłaściwe")
+            except ObjectDoesNotExist:
+                self.add_error("email", "Użytkowik o podanym mailu nie istnieje.")
+        else:
+            return None

@@ -1,10 +1,19 @@
 {% extends "../base.html" %}
 
 {% block content %}
-{% csrf_token %}
-{% load static %}
-  <body>
+    <style>
+.right {
+    text-align: right;
+    margin-right: 170px;
+}
 
+.left {
+    text-align: right;
+    margin-left: 250px;
+}
+    </style>
+  <body>
+  {% load static %}
     <section class="login-page" id="login">
       <h2>Zaloguj się</h2>
       <div class="form-group">
@@ -13,14 +22,27 @@
                 {{ message|safe }}
             {% endfor %}
         {% endif %}
-      <form>
-        <div class="form-group">
-          <input type="email" name="email" placeholder="Email" />
+      <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group input right">
+<!--            <td>{{ form.email.label_tag }}</td>-->
+<!--    <td>{{ form.email }}</td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--    <td>{{ form.password.label_tag }}</td>-->
+<!--    <td>{{ form.password }}</td>-->
+                {{ field.label_tag }}
+                {% if field.help_text %}
+          <sup>{{ field.help_text }}</sup>
+            {% endif %}
+                {% for error in field.errors %}
+             <div class="alert alert-danger">{{error}}</div>
+           {% endfor %}
+                {{ field }}
         </div>
-        <div class="form-group">
-          <input type="password" name="password" placeholder="Hasło" />
-          <a href="#" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
-        </div>
+        {% endfor %}
+        <a href="#" class="btn btn--small btn--without-border reset-password form-group input right left">Przypomnij hasło</a>
 
         <div class="form-group form-group--buttons">
           <a href="{% url 'register'%}#register" class="btn btn--without-border">Załóż konto</a>

@@ -3,11 +3,15 @@ from django.views.generic import View
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
-from .form import AddUserForm
+from .form import AddUserForm, LoginForm
 from .models import Category, Donation, Institution
 
 # Create your views here.
+
 
 
 """
@@ -89,7 +93,27 @@ class Login(View):
     template_name = 'main_app/login.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        return render(request, self.template_name, {"form": LoginForm()})
+
+    def post(self, request):
+        form = LoginForm(request.POST or None)
+        if form.is_valid():
+            user = form.authenticate_user()  # authentication
+            if user:  # user.is_authenticated
+                login(request, user)  # login
+                return redirect('/')
+        elif form.has_error("email"):  # przekierowuje gdy powstaje form email error
+            messages.error(request, "Tego adresu email nie ma w bazie. Załóż konto.")
+            return redirect("register")
+
+        return render(request, self.template_name, {"form": form})
+
+
+# Log out funtion for logged users
+@login_required  # requirement for user, that he needs to be logged in
+def log_out(request):
+    logout(request)
+    return redirect("/")
 
 
 # User Registration View
@@ -112,3 +136,4 @@ class Register(View):
         else:
             messages.success(request, "Problem z rejestracją użytkownika. Spróbuj ponownie")
             return render(request, self.template_name, {"form": form})
+
