@@ -6,6 +6,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin
+)
+from django.core.exceptions import ObjectDoesNotExist
 
 from .form import AddUserForm, LoginForm
 from .models import Category, Donation, Institution
@@ -73,10 +77,22 @@ class LandingPage(View):
 
 
 # Add User donation
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
     template_name = 'main_app/form.html'
+    permission_required = 'main_app.add_donation'
 
     def get(self, request):
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        try:
+            if user:   # checking if user is in base
+                ctx = {
+                    'categories': Category.objects.all()
+                }
+                return render(request, self.template_name, ctx)
+        except user.DoesNotExist:  # if user DoesNotExist
+            messages.error(request, "Żeby cokolwiek oddać musisz być zalogowany!") # nie wyświetla się message error ?
+            return redirect("login")
         return render(request, self.template_name)
 
 
@@ -127,13 +143,13 @@ class Register(View):
         form = AddUserForm(request.POST)
         logged_user = request.user.username
         if logged_user:
-            messages.success(request, "Posiadasz już konto!")
+            messages.error(request, "Posiadasz już konto!")
             return render(request, self.template_name, {"form": form})
         elif form.is_valid():
             form.save()
             messages.success(request, "Użytkownik zarejestrowany pomyślnie! Zaloguj się, żeby korzystać z serwisu.")
             return redirect("login")
         else:
-            messages.success(request, "Problem z rejestracją użytkownika. Spróbuj ponownie")
+            messages.error(request, "Problem z rejestracją użytkownika. Spróbuj ponownie")
             return render(request, self.template_name, {"form": form})
 

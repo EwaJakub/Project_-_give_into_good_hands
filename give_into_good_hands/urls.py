@@ -18,10 +18,12 @@ from django.urls import path
 
 from main_app import views as main_views
 
+from django.urls import path, include
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_views.LandingPage.as_view(), name='landing-page'),
-    path('login/', main_views.Login.as_view(), name='login'),
+    path('accounts/login/', main_views.Login.as_view(), name='login'),  # samo login nie działało
     path('register/', main_views.Register.as_view(), name='register'),
     path('add-donation/', main_views.AddDonation.as_view(), name='add-donation'),
     path('donation-confirmation/', main_views.DonationConfirmation.as_view(), name='donation-confirmation'),
