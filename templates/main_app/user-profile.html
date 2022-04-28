@@ -1,0 +1,53 @@
+{% extends "../base.html" %}
+
+{% block content %}
+    <style>
+.right {
+    text-align: right;
+    margin-right: 170px;
+}
+    </style>
+    <body>
+<body>
+    <section class="login-page" id="register">
+        <h2>Mój profil</h2>
+       <div class="form-group">
+        {% if messages %}
+            {% for message in messages %}
+        <p>  class="btn btn-danger">{{ message|safe }}</p>
+            {% endfor %}
+        {% endif %}
+</div>
+     <form method="POST" enctype='multipart/form-data'>
+    {% csrf_token %}
+         <div class="form-group right">
+    <h3>  Profil użytkownika o nicku: {{ request.user.username }} </h3>
+    <h3> Imię: {{ user.first_name }} </h3>
+    <h3> Nazwisko: {{ user.last_name }} </h3>
+    <h3> email: {{ user.email }} </h3>
+                 {% csrf_token %}
+     <br> <input class="btn btn-secondary col-md-2" type="submit" value="Edytuj profil">
+ </form>
+
+    </section>
+    <section class="login-page" id="register">
+        <div class="form-group">
+    <h2> Lista twoich darów </h2>
+    {% for donation in user_donations %}
+    <h3> liczba worków: {{ donation.quantity }} <br>
+        Nazwa fundacji: {{ donation.institution.name }} <br>
+        Kategorie:
+        {% for category in donation.categories.all.values_list %}
+        {{ category.1 }}
+        {% endfor %} <br>
+        Kiedy zostały/będą zabrane: {{ donation.pick_up_date }}</h3>
+    {% endfor %}
+
+    <div>
+
+<!--       <form action= method="POST">-->
+
+</div>
+</section>
+</body>
+{% endblock %}

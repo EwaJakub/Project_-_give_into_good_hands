@@ -92,13 +92,13 @@
 <!--         Pagination-->
         <ul class="help--slides-pagination" id="1">
         {% if page_1.has_previous %}
-          <a href="?page={{ page_1.previous_page_number }}#help" class="btn btn--small btn--without-border active">< poprzednia</a>
+          <a href="?page={{ page_1.previous_page_number }}#help" class="btn btn--small btn--without-border " data-page="{{ pg }}">< poprzednia</a>
         {% endif %}
       {% for pg in page_1.paginator.page_range %}
-          <a href="?page={{pg}}#help" class="btn btn--small btn--without-border" >{{pg}}</a>
+          <a href="?page={{pg}}#help" class="btn btn--small btn--without-border active" data-page="{{ pg }}">{{pg}}</a>
       {% endfor %}
         {% if page_1.has_next %}
-          <a href="?page={{ page_1.next_page_number }}#help" class="btn btn--small btn--without-border">następna ></a>
+          <a href="?page={{ page_1.next_page_number }}#help" class="btn btn--small btn--without-border" data-page="{{ pg  }}">następna ></a>
         {% endif %}
 
 <!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border active" data-page="1">1</a></li>-->
@@ -135,15 +135,15 @@
         </ul>
 
 <!--        Pagination-->
-        <ul class="help--slides-pagination">
+        <ul class="help--slides-pagination" id="2">
         {% if page_2.has_previous %}
-            <a href="?page_2={{ page_2.previous_page_number }}#help" class="btn btn--small btn--without-border active">< poprzednia</a>
+            <a href="?page_2={{ page_2.previous_page_number }}#help" class="btn btn--small btn--without-border active" data-page="{{ pg }}">< poprzednia</a>
         {% endif %}
         {% for pg in page_2.paginator.page_range %}
-            <a href="?page_2={{pg}}#help" class="btn btn--small btn--without-border">{{pg}}</a>
+            <a href="?page_2={{pg}}#help" class="btn btn--small btn--without-border" data-page="{{ pg }}">{{pg}}</a></li>
         {% endfor %}
         {% if page_2.has_next %}
-            <a href="?page_2={{ page_2.next_page_number }}#help" class="btn btn--small btn--without-border">następna ></a>
+            <a href="?page_2={{ page_2.next_page_number }}#help" class="btn btn--small btn--without-border" data-page="{{ pg }}">następna ></a>
         {% endif %}
         </ul>
       </div>
@@ -174,13 +174,13 @@
 <!--          Pagination-->
         <ul class="help--slides-pagination" id="3">
         {% if page_3.has_previous %}
-            <a href="?page_3={{ page_3.previous_page_number }}" class="btn btn--small btn--without-border active">< poprzednia</a>
+            <a href="?page_3={{ page_3.previous_page_number }}" class="btn btn--small btn--without-border active" data-page="3">< poprzednia</a>
         {% endif %}
         {% for pg in page_3.paginator.page_range %}
-            <a href="?page_3={{pg}}" class="btn btn--small btn--without-border active">{{pg}}</a>
+            <a href="?page_3={{pg}}" class="btn btn--small btn--without-border active" data-page="3">{{pg}}</a>
         {% endfor %}
         {% if page_3.has_next %}
-            <a href="?page_3={{ page_3.next_page_number }}" class="btn btn--small btn--without-border active">następna ></a>
+            <a href="?page_3={{ page_3.next_page_number }}" class="btn btn--small btn--without-border active" data-page="3">następna ></a>
         {% endif %}
 
         </ul>

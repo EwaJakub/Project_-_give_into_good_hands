@@ -84,6 +84,10 @@ class AddDonation(LoginRequiredMixin, View):
     def get(self, request):
         logged_user = request.user.username
         user = User.objects.get(username=logged_user)
+        institutions = Institution.objects.all()
+        ctx = {
+            'institutions': institutions
+        }
         try:
             if user:   # checking if user is in base
                 ctx = {
@@ -93,7 +97,13 @@ class AddDonation(LoginRequiredMixin, View):
         except user.DoesNotExist:  # if user DoesNotExist
             messages.error(request, "Żeby cokolwiek oddać musisz być zalogowany!") # nie wyświetla się message error ?
             return redirect("login")
-        return render(request, self.template_name)
+        return render(request, self.template_name, ctx)
+
+    def post(self, request):
+        #categories = request.POST.getlist("categories")
+        #institutions = Institution.objects.filter(name__in=categories)
+        institutions = Institution.objects.all()
+
 
 
 # Confirmation for User donation
@@ -153,3 +163,17 @@ class Register(View):
             messages.error(request, "Problem z rejestracją użytkownika. Spróbuj ponownie")
             return render(request, self.template_name, {"form": form})
 
+
+class UserProfileView(LoginRequiredMixin, View):
+    template_name = "main_app/user-profile.html"
+    #permission_required = "main_app.view_user"
+
+    def get(self, request):
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        user_donations = Donation.objects.filter(user=user.pk)
+        ctx = {
+            'user': user,
+            'user_donations': user_donations
+        }
+        return render(request, self.template_name, ctx)

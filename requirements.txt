@@ -2,3 +2,4 @@ Django
 pytz
 django-extensions
 bpython
+psycopg2-binary

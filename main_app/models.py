@@ -12,6 +12,10 @@ TYPE = (
 class Category(models.Model):
     name = models.CharField(max_length=225)
 
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
     def __str__(self):
         return self.name
 
@@ -21,6 +25,10 @@ class Institution(models.Model):
     description = models.TextField()
     type = models.IntegerField(choices=TYPE, default=1, null=True)
     categories = models.ManyToManyField(Category, related_name='institutions')
+
+    class Meta:
+        verbose_name = 'institution'
+        verbose_name_plural = 'institutions'
 
     def __str__(self):
         return self.name
@@ -38,5 +46,9 @@ class Donation(models.Model):
     pick_up_comment = models.TextField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='donations_institutions')
 
+    class Meta:
+        verbose_name = 'donation'
+        verbose_name_plural = 'donations'
+
     def __str__(self):
-         return self.quantity
+         return self.city

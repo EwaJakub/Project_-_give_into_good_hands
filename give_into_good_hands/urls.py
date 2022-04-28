@@ -21,11 +21,12 @@ from main_app import views as main_views
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin-page'),  # {% url 'admin-page' %} nie działa
     path('', main_views.LandingPage.as_view(), name='landing-page'),
     path('accounts/login/', main_views.Login.as_view(), name='login'),  # samo login nie działało
     path('register/', main_views.Register.as_view(), name='register'),
     path('add-donation/', main_views.AddDonation.as_view(), name='add-donation'),
     path('donation-confirmation/', main_views.DonationConfirmation.as_view(), name='donation-confirmation'),
     path('logout/', main_views.log_out, name='logout'),
+    path('my-profile/', main_views.UserProfileView.as_view(), name='my-profile'),
 ]

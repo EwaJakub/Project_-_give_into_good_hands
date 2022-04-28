@@ -16,12 +16,17 @@
           <li class="logged-user">
             Witaj {{ request.user.username }}
             <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
+              <li><a href="{% url 'my-profile' %}">Profil</a></li>
                  {% if request.path == '/donation-confirmation/' %}
               <li><a href="#">Moje zbiórki</a></li>
                 {% elif request.path == '/add-donation/' %}
               <li><a href="#">Ustawienia</a></li>
                 {% endif %}
+              {% if request.user.is_superuser %}
+              <li><a href="/admin-page/" >Panel administracyjny</a></li>
+              {% else %}
+              <li><a href="/admin-page/" style="display:none;">Panel administracyjny</a></li>
+              {% endif %}
               <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             </ul>
           </li>
