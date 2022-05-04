@@ -29,4 +29,6 @@ urlpatterns = [
     path('donation-confirmation/', main_views.DonationConfirmation.as_view(), name='donation-confirmation'),
     path('logout/', main_views.log_out, name='logout'),
     path('my-profile/', main_views.UserProfileView.as_view(), name='my-profile'),
+    path('edit-my-profile/', main_views.EditProfileView.as_view(), name='edit-my-profile'),
+    path('change-password/', main_views.EditProfileView.as_view(), name='change-password'),
 ]

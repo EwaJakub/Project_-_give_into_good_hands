@@ -75,9 +75,9 @@
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
 
             {% for institution in institutions %}
-            <div class="form-group form-group--checkbox">
+            <div class="form-group form-group--checkbox" data-categories="{% for c in institution.categories.all %}{{ c.id }},{% endfor %}">
               <label>
-                <input type="radio" name="organization" value="old" />
+                <input type="radio" name="organization" value="{{ institution.name }}" />
                 <span class="checkbox radio"></span>
                 <span class="description">
                   <div class="title">{{ institution.name }}</div>
@@ -97,7 +97,7 @@
 
           <!-- STEP 5 -->
           <div data-step="4">
-            <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
+            <h3>Podaj adres oraz termin odbioru rzeczy przez kuriera:</h3>
 
             <div class="form-section form-section--columns">
               <div class="form-section--column">
@@ -157,16 +157,12 @@
                 <ul>
                   <li>
                     <span class="icon icon-bag"></span>
-                    <span class="summary--text"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
-                    >
+                    <span class="summary--text"></span>
                   </li>
 
                   <li>
                     <span class="icon icon-hand"></span>
-                    <span class="summary--text"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
-                    >
+                    <span class="summary--text"></span>
                   </li>
                 </ul>
               </div>
@@ -175,19 +171,19 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
                   <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
                   </ul>
                 </div>
               </div>

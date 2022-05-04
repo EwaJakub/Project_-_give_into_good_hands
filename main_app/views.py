@@ -9,10 +9,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin
 )
+from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 
 from .form import AddUserForm, LoginForm
 from .models import Category, Donation, Institution
+from .form import EditUserProfileForm, ResetPasswordForm
 
 # Create your views here.
 
@@ -84,14 +86,11 @@ class AddDonation(LoginRequiredMixin, View):
     def get(self, request):
         logged_user = request.user.username
         user = User.objects.get(username=logged_user)
-        institutions = Institution.objects.all()
-        ctx = {
-            'institutions': institutions
-        }
         try:
             if user:   # checking if user is in base
                 ctx = {
-                    'categories': Category.objects.all()
+                    'categories': Category.objects.all(),
+                    'institutions': Institution.objects.all()
                 }
                 return render(request, self.template_name, ctx)
         except user.DoesNotExist:  # if user DoesNotExist
@@ -171,9 +170,90 @@ class UserProfileView(LoginRequiredMixin, View):
     def get(self, request):
         logged_user = request.user.username
         user = User.objects.get(username=logged_user)
-        user_donations = Donation.objects.filter(user=user.pk)
+        user_donations = Donation.objects.filter(user=user.pk).order_by('-is_taken')
         ctx = {
             'user': user,
             'user_donations': user_donations
         }
         return render(request, self.template_name, ctx)
+
+    def post(self, request):
+        donation_id = request.POST.get('donation_id')
+        donation = Donation.objects.filter(id=donation_id).first()
+        status = request.POST.get('status')
+        if status == 'Zabrany':
+            donation.is_taken = 1
+            donation.save()
+        elif status == 'Niezabrany':
+            donation.is_taken = 0
+            donation.save()
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        user_donations = Donation.objects.filter(user=user.pk).order_by('-is_taken')
+        ctx = {
+            'user': user,
+            'user_donations': user_donations
+        }
+        return render(request, self.template_name, ctx)
+
+
+class EditProfileView(LoginRequiredMixin, View):
+    template_name = "main_app/user-profile-edit.html"
+
+    def get(self, request):
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        form = EditUserProfileForm(initial={'first_name': user.first_name,  # set's up initial User data
+                                            'last_name': user.last_name,
+                                            'email': user.email,
+                                            })
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = EditUserProfileForm(request.POST, request.FILES)
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        if form.is_valid():
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            email = form.cleaned_data["email"]
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.save()
+            return redirect('my-profile')
+        form = EditUserProfileForm(initial={'first_name': user.first_name,
+                                            'last_name': user.last_name,
+                                            'email': user.email,
+                                            })
+        return render(request, self.template_name, {'form': form})
+
+
+class ResetPasswordView(LoginRequiredMixin, View):
+    template_name = "main_app/reset_password.html"
+
+    # def handle_no_permission(self):
+    #     print("Logged this call")
+    #     return super().handle_no_permission()
+
+    def get(self, request):
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        if not user:
+            raise Http404
+        return render(request, self.template_name, {"form": ResetPasswordForm})
+
+    def post(self, request):
+        form = ResetPasswordForm(request.POST)
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        if form.is_valid():
+            password = form.cleaned_data["password1"]
+            user.set_password(password)
+            user.save()
+
+            messages.success(request, "Hasło zmienione")
+            return redirect("login")
+        else:
+            messages.error(request, "Hasła do siebie nie pasują.")
+            return render(request, self.template_name, {"form": form})

@@ -20,7 +20,7 @@
                  {% if request.path == '/donation-confirmation/' %}
               <li><a href="#">Moje zbiórki</a></li>
                 {% elif request.path == '/add-donation/' %}
-              <li><a href="#">Ustawienia</a></li>
+              <li><a href="{% url 'edit-my-profile' %}">Ustawienia</a></li>
                 {% endif %}
               {% if request.user.is_superuser %}
               <li><a href="/admin-page/" >Panel administracyjny</a></li>

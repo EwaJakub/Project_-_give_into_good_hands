@@ -1,0 +1,50 @@
+{% extends "../base.html" %}
+
+{% block app_head %}Edytuj profil: {% endblock %}
+
+{% block content %}
+    <style>
+.right {
+    text-align: right;
+    margin-right: 170px;
+}
+    </style>
+
+        {% if messages %}
+            {% for message in messages %}
+    <p  class="btn btn-danger"> {{ message|safe }} </p>
+            {% endfor %}
+        {% endif %}
+</div>
+    <section class="login-page">
+        <h2>Edytuj profil</h2>
+    <form method="post" enctype='multipart/form-data'>
+
+        {% csrf_token %}
+        <div class="form-group right">
+        {% for field in form %}
+        <br><div class="row">
+        <div class="col-md-2 ms-sm-auto col-lg-2 px-md-6">
+       {{ field.label_tag }}
+        {% if field.help_text %}
+          <sup>{{ field.help_text }}</sup>
+        {% endif %}
+
+       </div><div class="col-md-10 pull-left">
+         {{ field }}
+       </div>
+    </div>
+ {% endfor %}
+     <br> <input class="btn btn--small" type="submit" value="Zapisz">
+        </div>
+     </form>
+      <div>
+       <form action="{% url 'change-password' %}" enctype='multipart/form-data'>
+       {% csrf_token %}
+     <br> Nie pamiętasz hasła?  <a class="btn btn-secondary col-md-2" href="{% url 'change-password' %}">Zmień hasło</a>
+ </form>
+</section>
+</div>
+</div>
+
+{% endblock %}

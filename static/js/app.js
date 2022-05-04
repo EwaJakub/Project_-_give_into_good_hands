@@ -252,4 +252,98 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
-});
+
+/**
+ * Giving donation form
+ *
+ */
+
+//const a = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.value})
+    const step1 = Array.from(document.querySelectorAll("div[data-step='2']"));
+//const step1 = Array.from(document.querySelectorAll("div[data-step='1']"));
+//const step3 = Array.from(document.querySelectorAll("div[data-step='3']"));
+// const step4 = step3.from(document.querySelectorAll("div"));
+
+
+  step1.forEach(function(element) {
+      element.addEventListener('click', function(e) {
+        if(e.target.tagName !== 'BUTTON') return;
+        const array = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.value});
+        // console.log(array); // ['5']
+        const step3 = Array.from(document.querySelectorAll("div[data-step='3'] .form-group--checkbox"));
+        // console.log(step3); // wyciągnięte checkboxy instytucji
+        array.forEach(function(el) {
+          // console.log(el) // 5 - iterowanie po elementach array
+          step3.forEach(function(e) {
+            // console.log(e)  // pojedynczy checkbox
+            // console.log(e.dataset.categories) //1,2,
+            const dataset_info = e.dataset.categories.split(",")
+            //console.log(dataset_info)
+            const newArray = dataset_info.filter(function(element) {
+              return el === element
+            });
+            if (newArray.length === 0) {
+                  e.style.display = 'none'
+                };
+            });
+        });
+      });
+  });
+  });
+
+/**
+ * Giving donation form data
+ *
+ */
+
+const step4 = Array.from(document.querySelectorAll("div[data-step='4'] .next-step"));
+  console.log(step4)
+
+const categories = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.nextElementSibling.nextElementSibling.innerText }).join(', ');
+  console.log(categories)
+
+const organization = Array.from(document.querySelectorAll("input[name=organization]")).filter(function(input){return input.checked}).map(function(input){return input.value}).join('')
+  console.log(organization)
+
+const bags = document.querySelector("input[name=bags]").value
+  console.log(bags)
+
+const address = document.querySelector("input[name=address]").value
+  console.log(address)
+const city = document.querySelector("input[name=city]").value;
+  console.log(city)
+const postcode = document.querySelector("input[name=postcode]").value;
+  console.log(postcode)
+const phone = document.querySelector("input[name=phone]").value;
+  console.log(phone)
+const data = document.querySelector("input[name=data]").value;
+  console.log(data)
+const time = document.querySelector("input[name=time]").value;
+  console.log(time)
+const more_info = document.querySelector("textarea[name=more_info]").value;
+  console.log(more_info)
+
+
+    step4.forEach(function(element) {
+      element.addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') return;
+          const step5 = document.querySelector("div[data-step='5']");
+          console.log(step5)
+          const summaryText1 = step5.querySelector('span.icon-bag').nextElementSibling
+          summaryText1.innerHTML = bags + "x worek z rzeczami w kategoriach: " + categories
+          console.log(summaryText1 )
+          const summaryText2 = step5.querySelector('span.icon-hand').nextElementSibling
+          summaryText2.innerHTML = `Dla fundacji:  ${organization}`
+          console.log(summaryText1 )
+          const column1 = step5.querySelector('.form-section--columns').firstElementChild.lastElementChild.children
+          console.log(column1)
+          column1[0].innerHTML = address
+          column1[1].innerHTML = city
+          column1[2].innerHTML = postcode
+          column1[3].innerHTML = phone
+          const column2 = step5.querySelector('.form-section--columns').lastElementChild.lastElementChild.children
+          console.log(column1)
+          column2[0].innerHTML = data
+          column2[1].innerHTML = time
+          column2[2].innerHTML = more_info
+      })});

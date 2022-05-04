@@ -78,3 +78,14 @@ class LoginForm(forms.Form):
                 self.add_error("email", "Użytkowik o podanym mailu nie istnieje.")
         else:
             return None
+
+
+class EditUserProfileForm(forms.Form):
+    first_name = forms.CharField(label='Imię:', max_length=200, required=False)
+    last_name = forms.CharField(label='Nazwisko:', max_length=200, required=False)
+    email = forms.CharField(label='email', max_length=200)
+
+
+class ResetPasswordForm(forms.Form):
+    password1 = forms.CharField(label='Hasło', max_length=255, widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Powtórz hasło', max_length=255, widget=forms.PasswordInput)
