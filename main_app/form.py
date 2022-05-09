@@ -84,6 +84,7 @@ class EditUserProfileForm(forms.Form):
     first_name = forms.CharField(label='Imię:', max_length=200, required=False)
     last_name = forms.CharField(label='Nazwisko:', max_length=200, required=False)
     email = forms.CharField(label='email', max_length=200)
+    password = forms.CharField(label='Podaj hasło żeby potwierdzić zmiany', max_length=255, widget=forms.PasswordInput)
 
 
 class ResetPasswordForm(forms.Form):

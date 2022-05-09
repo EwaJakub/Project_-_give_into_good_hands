@@ -3,11 +3,14 @@
 {% block content %}
   {% csrf_token %}
   {% load static %}
+
   <body>
+
     <section class="form--steps" id="add-donation">
       <div class="form--steps-instructions">
         <div class="form--steps-container">
           <h3>Ważne!</h3>
+
           <p data-step="1" class="active">
             Uzupełnij szczegóły dotyczące Twoich rzeczy. Dzięki temu będziemy
             wiedzieć komu najlepiej je przekazać.
@@ -26,13 +29,11 @@
 
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
-
-        <form action="form-confirmation.html" method="post">
-            {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
+         <form method="POST" action="{% url 'add-donation' %}">
+            {% csrf_token %}
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
             {% for category in categories %}
             <div class="form-group form-group--checkbox">
               <label>
@@ -73,7 +74,7 @@
           <!-- STEP 4 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-
+            <h4> * Jeśli nie masz do wyboru żadnej organizacji, wróć do Kroku 1/5 </h4>
             {% for institution in institutions %}
             <div class="form-group form-group--checkbox" data-categories="{% for c in institution.categories.all %}{{ c.id }},{% endfor %}">
               <label>
@@ -87,6 +88,9 @@
                 </span>
               </label>
             </div>
+
+            {% empty %}
+             <h4>Wybierz organizacje, której chcesz pomóc:</h4>
             {% endfor %}
 
             <div class="form-group form-group--buttons">
@@ -188,13 +192,13 @@
                 </div>
               </div>
             </div>
-
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="submit" class="btn">Potwierdzam</button>
+              <button class="btn" type="submit">Potwierdzam</button>
+           </form>
             </div>
           </div>
-        </form>
+
       </div>
     </section>
   {% endblock %}

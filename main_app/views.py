@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin
 )
+import operator
+from django.db.models import Q
+from functools import reduce
+
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -96,13 +100,37 @@ class AddDonation(LoginRequiredMixin, View):
         except user.DoesNotExist:  # if user DoesNotExist
             messages.error(request, "Żeby cokolwiek oddać musisz być zalogowany!") # nie wyświetla się message error ?
             return redirect("login")
-        return render(request, self.template_name, ctx)
+        return render(request, self.template_name)
 
     def post(self, request):
-        #categories = request.POST.getlist("categories")
-        #institutions = Institution.objects.filter(name__in=categories)
-        institutions = Institution.objects.all()
+        logged_user = request.user.username
+        user = User.objects.get(username=logged_user)
+        categories_list = request.POST.getlist("categories")
+        organization = request.POST.get("organization")
+        institution = Institution.objects.filter(name=organization).first()
+        bags = request.POST.get("bags")
+        address = request.POST.get("address")
+        city = request.POST.get("city")
+        postcode = request.POST.get("postcode")
+        phone = request.POST.get("phone")
+        data = request.POST.get("data")
+        time = request.POST.get("time")
+        more_info = request.POST.get("more_info")
+        new_donation = Donation.objects.create(
+            quantity=bags,
+            address=address,
+            phone_number=phone,
+            city=city,
+            zip_code=postcode,
+            pick_up_date=data,
+            pick_up_time=time,
+            pick_up_comment=more_info,
+            user=user,
+            institution=institution
+        )
+        new_donation.categories.set(categories_list)
 
+        return redirect('donation-confirmation')
 
 
 # Confirmation for User donation
@@ -178,21 +206,23 @@ class UserProfileView(LoginRequiredMixin, View):
         return render(request, self.template_name, ctx)
 
     def post(self, request):
-        donation_id = request.POST.get('donation_id')
-        donation = Donation.objects.filter(id=donation_id).first()
-        status = request.POST.get('status')
-        if status == 'Zabrany':
-            donation.is_taken = 1
-            donation.save()
-        elif status == 'Niezabrany':
-            donation.is_taken = 0
-            donation.save()
+        donation_id = request.POST.getlist('donation_id')
+        for element in donation_id:
+            donation = Donation.objects.filter(id=element).first()
+            status = request.POST.get('status' + element)
+            if status == 'Zabrany':
+                donation.is_taken = 1
+                donation.save()
+            elif status == 'Niezabrany':
+                donation.is_taken = 0
+                donation.save()
         logged_user = request.user.username
         user = User.objects.get(username=logged_user)
         user_donations = Donation.objects.filter(user=user.pk).order_by('-is_taken')
         ctx = {
             'user': user,
-            'user_donations': user_donations
+            'user_donations': user_donations,
+            'donation_id': donation_id
         }
         return render(request, self.template_name, ctx)
 
@@ -217,11 +247,14 @@ class EditProfileView(LoginRequiredMixin, View):
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
             email = form.cleaned_data["email"]
-            user.first_name = first_name
-            user.last_name = last_name
-            user.email = email
-            user.save()
-            return redirect('my-profile')
+            password = form.cleaned_data['password']
+            if user.password == password:
+                user.first_name = first_name
+                user.last_name = last_name
+                user.email = email
+                user.save()
+                return redirect('my-profile')
+            messages.error(request, "Problem ze zmianą danych, spróbuj ponownie")
         form = EditUserProfileForm(initial={'first_name': user.first_name,
                                             'last_name': user.last_name,
                                             'email': user.email,

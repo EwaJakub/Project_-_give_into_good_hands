@@ -19,9 +19,8 @@
               <li><a href="{% url 'my-profile' %}">Profil</a></li>
                  {% if request.path == '/donation-confirmation/' %}
               <li><a href="#">Moje zbiórki</a></li>
-                {% elif request.path == '/add-donation/' %}
-              <li><a href="{% url 'edit-my-profile' %}">Ustawienia</a></li>
                 {% endif %}
+              <li><a href="{% url 'edit-my-profile' %}">Ustawienia</a></li>
               {% if request.user.is_superuser %}
               <li><a href="/admin-page/" >Panel administracyjny</a></li>
               {% else %}

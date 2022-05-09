@@ -175,6 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       this.$stepInstructions = form.querySelectorAll(".form--steps-instructions p");
       const $stepForms = form.querySelectorAll("form > div");
+      console.log($stepForms)
       this.slides = [...this.$stepInstructions, ...$stepForms];
 
       this.init();
@@ -243,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
-      e.preventDefault();
+      // e.preventDefault();
       this.currentStep++;
       this.updateForm();
     }
@@ -267,9 +268,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
   step1.forEach(function(element) {
       element.addEventListener('click', function(e) {
-        if(e.target.tagName !== 'BUTTON') return;
-        const array = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.value});
-        // console.log(array); // ['5']
+        if(e.target.tagName !== 'BUTTON' && array.length !== 0) return;
+        let array = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.value});
+        console.log(array); // ['5']
+        if (array.length === 0) {
+          arrayNewLength = Array.from(document.querySelectorAll("input[name=categories]")).length
+          console.log(array)
+          for (let i = 1; i <= arrayNewLength; i ++) {
+            array.push(i)
+          }
+        }
         const step3 = Array.from(document.querySelectorAll("div[data-step='3'] .form-group--checkbox"));
         // console.log(step3); // wyciągnięte checkboxy instytucji
         array.forEach(function(el) {
@@ -282,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const newArray = dataset_info.filter(function(element) {
               return el === element
             });
-            if (newArray.length === 0) {
+            if (newArray.length === 0 && newArray.length < array.length) {
                   e.style.display = 'none'
                 };
             });
@@ -296,54 +304,50 @@ document.addEventListener("DOMContentLoaded", function() {
  *
  */
 
-const step4 = Array.from(document.querySelectorAll("div[data-step='4'] .next-step"));
+const step4 = Array.from(document.querySelectorAll("div[data-step='4']"));
   console.log(step4)
-
-const categories = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.nextElementSibling.nextElementSibling.innerText }).join(', ');
-  console.log(categories)
-
-const organization = Array.from(document.querySelectorAll("input[name=organization]")).filter(function(input){return input.checked}).map(function(input){return input.value}).join('')
-  console.log(organization)
-
-const bags = document.querySelector("input[name=bags]").value
-  console.log(bags)
-
-const address = document.querySelector("input[name=address]").value
-  console.log(address)
-const city = document.querySelector("input[name=city]").value;
-  console.log(city)
-const postcode = document.querySelector("input[name=postcode]").value;
-  console.log(postcode)
-const phone = document.querySelector("input[name=phone]").value;
-  console.log(phone)
-const data = document.querySelector("input[name=data]").value;
-  console.log(data)
-const time = document.querySelector("input[name=time]").value;
-  console.log(time)
-const more_info = document.querySelector("textarea[name=more_info]").value;
-  console.log(more_info)
 
 
     step4.forEach(function(element) {
       element.addEventListener('click', function(e) {
         if (e.target.tagName !== 'BUTTON') return;
-          const step5 = document.querySelector("div[data-step='5']");
-          console.log(step5)
-          const summaryText1 = step5.querySelector('span.icon-bag').nextElementSibling
-          summaryText1.innerHTML = bags + "x worek z rzeczami w kategoriach: " + categories
-          console.log(summaryText1 )
-          const summaryText2 = step5.querySelector('span.icon-hand').nextElementSibling
-          summaryText2.innerHTML = `Dla fundacji:  ${organization}`
-          console.log(summaryText1 )
-          const column1 = step5.querySelector('.form-section--columns').firstElementChild.lastElementChild.children
-          console.log(column1)
-          column1[0].innerHTML = address
-          column1[1].innerHTML = city
-          column1[2].innerHTML = postcode
-          column1[3].innerHTML = phone
-          const column2 = step5.querySelector('.form-section--columns').lastElementChild.lastElementChild.children
-          console.log(column1)
-          column2[0].innerHTML = data
-          column2[1].innerHTML = time
-          column2[2].innerHTML = more_info
-      })});
+        const categories = Array.from(document.querySelectorAll("input[name=categories]")).filter(function(input){return input.checked}).map(function(input){return input.nextElementSibling.nextElementSibling.innerText }).join(', ');
+          console.log(categories)
+        const organization = Array.from(document.querySelectorAll("input[name=organization]")).filter(function(input){return input.checked}).map(function(input){return input.value}).join('')
+          console.log(organization)
+        const bags = document.querySelector("input[name=bags]").value
+          console.log(bags)
+        const address = document.querySelector("input[name=address]").value
+          console.log(address)
+        const city = document.querySelector("input[name=city]").value;
+          console.log(city)
+        const postcode = document.querySelector("input[name=postcode]").value;
+          console.log(postcode)
+        const phone = document.querySelector("input[name=phone]").value;
+          console.log(phone)
+        const data = document.querySelector("input[name=data]").value;
+          console.log(data)
+        const time = document.querySelector("input[name=time]").value;
+          console.log(time)
+        const more_info = document.querySelector("textarea[name=more_info]").value;
+          console.log(more_info)
+        const step5 = document.querySelector("div[data-step='5']");
+        console.log(step5)
+        const summaryText1 = step5.querySelector('span.icon-bag').nextElementSibling
+        summaryText1.innerHTML = `${bags}  x worek z rzeczami w kategoriach:  ${categories}`
+        console.log(summaryText1 )
+        const summaryText2 = step5.querySelector('span.icon-hand').nextElementSibling
+        summaryText2.innerHTML = `Dla fundacji:  ${organization}`
+        console.log(summaryText1 )
+        const column1 = step5.querySelector('.form-section--columns').firstElementChild.lastElementChild.children
+        console.log(column1)
+        column1[0].innerHTML = address
+        column1[1].innerHTML = city
+        column1[2].innerHTML = postcode
+        column1[3].innerHTML = phone
+        const column2 = step5.querySelector('.form-section--columns').lastElementChild.lastElementChild.children
+        console.log(column1)
+        column2[0].innerHTML = data
+        column2[1].innerHTML = time
+        column2[2].innerHTML = more_info
+      }) });

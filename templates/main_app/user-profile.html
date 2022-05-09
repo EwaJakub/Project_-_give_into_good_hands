@@ -6,6 +6,10 @@
     text-align: right;
     margin-right: 170px;
 }
+
+.button--green {
+    background-color: lightgreen;
+}
     </style>
     <body>
 <body>
@@ -29,11 +33,13 @@
              <br> <a class="btn btn-secondary col-md-2" href="{% url 'edit-my-profile' %}">Edytuj profil</a>
 
     </section>
+    {% csrf_token %}
     <section class="login-page">
         <span class="form-group">
     <h2> Lista twoich darów </h2>
     {% for donation in user_donations %}
-            <input type="hidden" name="donation_id" value="{{ donation.id }}">
+        <input type="hidden" name="donation_id" value="{{ donation.id }}">
+
     <h3> liczba worków: {{ donation.quantity }} <br>
         Nazwa fundacji: {{ donation.institution.name }} <br>
         Kategorie:
@@ -42,9 +48,9 @@
         {% endfor %} <br>
         Kiedy zostały/będą zabrane: {{ donation.pick_up_date }}</h3>
             {% if donation.is_taken == 0 %}
-    <br> <input class="btn btn--small" name="status" type="submit" value="Zabrany">
+    <br> <input class="btn btn--small button--green" name="status{{ donation.id }}" type="submit" value="Zabrany">
             {% elif donation.is_taken == 1 %}
-    <br> <input class="btn btn--small" name="status" type="submit" value="Niezabrany">
+    <br> <input class="btn btn--small" name="status{{ donation.id }}" type="submit" value="Niezabrany">
             {% endif %}
     {% endfor %}
 
