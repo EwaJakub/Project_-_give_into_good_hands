@@ -87,6 +87,10 @@ class EditUserProfileForm(forms.Form):
     password = forms.CharField(label='Podaj hasło żeby potwierdzić zmiany', max_length=255, widget=forms.PasswordInput)
 
 
+
+
+
 class ResetPasswordForm(forms.Form):
-    password1 = forms.CharField(label='Hasło', max_length=255, widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Powtórz hasło', max_length=255, widget=forms.PasswordInput)
+    old_password = forms.CharField(label='Twoje obecne hasło', max_length=255, widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Nowe hasło', max_length=255, widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Powtórz nowe hasło', max_length=255, widget=forms.PasswordInput)

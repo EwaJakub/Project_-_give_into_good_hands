@@ -248,7 +248,8 @@ class EditProfileView(LoginRequiredMixin, View):
             last_name = form.cleaned_data["last_name"]
             email = form.cleaned_data["email"]
             password = form.cleaned_data['password']
-            if user.password == password:
+            user = authenticate(request, username=logged_user, password=password)
+            if user:
                 user.first_name = first_name
                 user.last_name = last_name
                 user.email = email
@@ -265,10 +266,6 @@ class EditProfileView(LoginRequiredMixin, View):
 class ResetPasswordView(LoginRequiredMixin, View):
     template_name = "main_app/reset_password.html"
 
-    # def handle_no_permission(self):
-    #     print("Logged this call")
-    #     return super().handle_no_permission()
-
     def get(self, request):
         logged_user = request.user.username
         user = User.objects.get(username=logged_user)
@@ -279,14 +276,20 @@ class ResetPasswordView(LoginRequiredMixin, View):
     def post(self, request):
         form = ResetPasswordForm(request.POST)
         logged_user = request.user.username
-        user = User.objects.get(username=logged_user)
         if form.is_valid():
-            password = form.cleaned_data["password1"]
-            user.set_password(password)
-            user.save()
-
-            messages.success(request, "Hasło zmienione")
-            return redirect("login")
+            old_password = form.cleaned_data["old_password"]
+            password1 = form.cleaned_data["password1"]
+            password2 = form.cleaned_data["password2"]
+        user = authenticate(request, username=logged_user, password=old_password)
+        if user:
+            if password1 == password2:
+                user.set_password(password1)
+                user.save()
+                messages.success(request, "Hasło zmienione")
+                return redirect("login")
+            else:
+                messages.error(request, "Hasła w obu polach muszą być jednakowe.")
+                return render(request, self.template_name, {"form": form})
         else:
-            messages.error(request, "Hasła do siebie nie pasują.")
+            messages.error(request, "Podałeś złe obecne hasło!")
             return render(request, self.template_name, {"form": form})
