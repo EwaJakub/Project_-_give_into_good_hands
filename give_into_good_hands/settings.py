@@ -83,13 +83,32 @@ WSGI_APPLICATION = 'give_into_good_hands.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'charity-donation.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'charity-donation.sqlite3',
+#     }
+# }
 
+DATABASES = {
+
+    'default': {
+
+        'NAME': 'charity_donation_2',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'coderslab',
+
+        'HOST': 'localhost',
+
+        'PORT': '',
+
+    }
+
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

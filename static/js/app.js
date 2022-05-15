@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$el.addEventListener("click", e => {
         if (e.target.classList.contains("btn") && e.target.parentElement.parentElement.classList.contains("help--slides-pagination")) {
           this.changePage(e);
+          console.log(e.target.classList.contains("btn") && e.target.parentElement.parentElement)
         }
       });
     }

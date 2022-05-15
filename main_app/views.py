@@ -33,7 +33,7 @@ class LandingPage(View):
 
     # function for pagination
     def paginator(self, request, element):
-        p = Paginator(element, 1)
+        p = Paginator(element, 5)
         page_number = request.GET.get('page')
         page = p.get_page(page_number)
         return page

@@ -92,13 +92,13 @@
 <!--         Pagination-->
         <ul class="help--slides-pagination" id="1">
         {% if page_1.has_previous %}
-          <a href="?page={{ page_1.previous_page_number }}#help" class="btn btn--small btn--without-border active" data-page="{{ pg }}">< poprzednia</a>
+          <a href="?page={{ page_1.previous_page_number }}#help" class="btn btn--small btn--without-border active" data-page="{{ page_1.previous_page_number }}">< poprzednia</a>
         {% endif %}
       {% for pg in page_1.paginator.page_range %}
           <a href="?page={{pg}}#help" class="btn btn--small btn--without-border" data-page="{{ pg }}">{{pg}}</a>
       {% endfor %}
         {% if page_1.has_next %}
-          <a href="?page={{ page_1.next_page_number }}#help" class="btn btn--small btn--without-border" data-page="{{ pg  }}">następna ></a>
+          <a href="?page={{ page_1.next_page_number }}#help" class="btn btn--small btn--without-border" data-page="{{ page_1.next_page_number  }}">następna ></a>
         {% endif %}
 
 <!--          <li><a href="#" class="btn btn&#45;&#45;small btn&#45;&#45;without-border active" data-page="1">1</a></li>-->
@@ -137,13 +137,13 @@
 <!--        Pagination-->
         <ul class="help--slides-pagination" id="2">
         {% if page_2.has_previous %}
-            <a href="" class="btn btn--small btn--without-border active" data-page="{{ pg }}">< poprzednia</a>
+            <a href="?page={{ page_2.previous_page_number }}#help" class="btn btn--small btn--without-border active" data-page="{{ pg }}">< poprzednia</a>
         {% endif %}
         {% for pg in page_2.paginator.page_range %}
-            <a href="" class="btn btn--small btn--without-border" data-page="{{ pg }}">{{pg}}</a></li>
+            <a href="?page={{pg}}#help" class="btn btn--small btn--without-border" data-page="{{ pg }}">{{pg}}</a></li>
         {% endfor %}
         {% if page_2.has_next %}
-            <a href="" class="btn btn--small btn--without-border" data-page="{{ pg }}">następna ></a>
+            <a href="?page={{ page_2.next_page_number }}#help" class="btn btn--small btn--without-border" data-page="{{ pg }}">następna ></a>
         {% endif %}
         </ul>
       </div>
